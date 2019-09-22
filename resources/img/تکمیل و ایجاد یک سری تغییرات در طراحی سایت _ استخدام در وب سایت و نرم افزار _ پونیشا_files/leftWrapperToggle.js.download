@@ -1,0 +1,77 @@
+$(document).ready(function () {
+    $(document).on('click', '[data-toggle="ponisha_left_wrapper"]', function () {
+
+        var leftEl = $('body').find('.left-wrapper'),
+            contentId = $(this).data('content-id');
+
+        var el = $(this);
+
+        if ($(this).attr('rel') == 'close') {
+            leftEl.removeClass('open');
+            $('#chat, #notifications, #launcher').hide();
+        } else if (leftEl.hasClass('open')) {
+            if ($(this).hasClass('open')) {
+                $('#chat, #notifications, #launcher').hide();
+                leftEl.removeClass('open');
+                $(this).removeClass('open');
+            } else {
+                $('#chat, #notifications, #launcher').hide();
+                leftEl.find('#' + contentId).show();
+                $('[data-toggle="ponisha_left_wrapper"]').removeClass('open');
+                $(this).addClass('open');
+            }
+        } else {
+            leftEl.addClass('open');
+            $(this).addClass('open');
+            leftEl.find('#' + contentId).show();
+        }
+
+
+        if (contentId == 'notifications') {
+            $(this).request({
+                type: 'GET',
+                url: $('#notifications_counter').data('url'),
+                data: {'last_seen': $('#notifications_counter').data('last-notification-id')},
+                element: el,
+                hasLoading: false,
+                successCallback: function (data) {
+                    $('body').trigger('seenNotifications');
+                },
+                errorCallback: function (xhr) {
+
+                }
+            });
+        }
+
+        $('body').trigger('chatState');
+    });
+
+    var returnCurrentWindowWidth = function () {
+        var winW = null;
+        if (document.body && document.body.offsetWidth) {
+            winW = document.body.offsetWidth;
+        }
+        if (document.compatMode == 'CSS1Compat' &&
+            document.documentElement &&
+            document.documentElement.offsetWidth) {
+            winW = document.documentElement.offsetWidth;
+        }
+        if (window.innerWidth && window.innerHeight) {
+            winW = window.innerWidth;
+        }
+
+        return winW;
+    }
+
+    $('body').click(function (e) {
+        if ($('#notifications').is(":visible")) {
+            if (returnCurrentWindowWidth() < 1520) {
+                var target = $(e.target);
+                if (!target.is('#st-trigger-effects *')) {
+                    $('body').find('.left-wrapper').removeClass('open');
+                    $('#notifications').hide();
+                }
+            }
+        }
+    });
+});

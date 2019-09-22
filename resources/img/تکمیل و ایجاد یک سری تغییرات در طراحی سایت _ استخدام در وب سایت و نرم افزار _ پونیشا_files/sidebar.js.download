@@ -1,0 +1,37 @@
+$(window).trigger('resize');
+$(document).ready(function () {
+
+    $(".parentMenu").click(function () {
+
+        if ($(this).find('ul').hasClass("child") && $(this).find('ul').hasClass("open")) {
+            $(this).find("div.pull-right i").removeClass("pf-down").addClass("pf-right");
+            $(this).find('ul').removeClass("open");
+            $(this).find('ul').slideUp(200);
+        } else {
+            // right/down icon correction
+            $(".parentMenu").find("div.pull-right i.pf-down").removeClass("pf-down").addClass("pf-right");
+            $(this).find("div.pull-right i").removeClass("pf-right").addClass("pf-down");
+
+            // showing child menu
+            $(".user-menu .child").removeClass("open");
+            $(".user-menu .child").slideUp(200);
+            $(this).find('ul').addClass("open");
+            $(this).find('ul').slideDown(200);
+        }
+    });
+
+    $('[rel="changeUserCurrenciesWithBalance"]').click(function () {
+        var that = this;
+        $('.hidden-footer-balance').each(function () {
+            $(this).toggleClass('open');
+        })
+    });
+
+    $('[rel="changeUserScores"]').click(function () {
+        var that = this;
+        $('.hidden-footer-score').each(function () {
+            $(this).toggleClass('open');
+        })
+    });
+
+});

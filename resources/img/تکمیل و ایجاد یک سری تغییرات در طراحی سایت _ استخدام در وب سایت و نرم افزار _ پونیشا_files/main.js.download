@@ -1,0 +1,208 @@
+function scrollTop(e) {
+    return $('html, body').animate({
+        scrollTop: $('html, body').offset().top - 100
+    }, 300)
+}
+
+function refreshPage(e, response) {
+    window.location.replace(window.location.href);
+}
+
+function goTo(e, response) {
+    window.location.href = response;
+}
+
+function closeModals(e, response) {
+    $('.modal').modal('hide');
+}
+
+(function( $ ) {
+    'use strict';
+
+    $(window).scroll(function () {
+        var scroll = $(window).scrollTop();
+
+        if (scroll > 0) {
+            $('#st-trigger-effects').addClass('border-bottom').addClass('border-color-10');
+        } else {
+            $('#st-trigger-effects').removeClass('border-bottom').removeClass('border-color-10');
+        }
+    });
+
+    $(document).ready(function() {
+        $('a[href="#"]').on('click', function (e) {
+            e.preventDefault();
+        });
+
+        $(document).on('mouseover', '[data-toggle="tooltip"]', function () {
+            var tooltipEl = $(this);
+            tooltipEl.tooltip({
+                //delay: 5000,
+                template: '<div class="tooltip ' + tooltipEl.data('class') + '" role="tooltip"><div class="tooltip-arrow ' + tooltipEl.data('arrow-class') + '"></div><div class="tooltip-inner"></div></div>'
+            });
+        });
+
+        $('.dropdown-menu[rel="noClose"]').on('click', function (e) {
+            e.stopPropagation();
+        });
+
+        $('[data-toggle="tooltip"]').each(function () {
+            var tooltipEl = $(this);
+            tooltipEl.tooltip({
+                template: '<div class="tooltip ' + tooltipEl.data('class') + '" role="tooltip"><div class="tooltip-arrow ' + tooltipEl.data('arrow-class') + '"></div><div class="tooltip-inner ' + tooltipEl.data('inner-class') + '"></div></div>'
+            });
+        });
+
+        $('[data-toggle="slide_visible"]').on('click', function() {
+            var el = $(this);
+
+            $(el.data('target')).toggleClass('open');
+        })
+
+        //$('[data-toggle="popover"]').popover({
+        //    html: true,
+        //    placement: 'auto bottom',
+        //    content: function () {
+        //        return $('#' + $(this).data('content-id')).html();
+        //    }
+        //});
+
+        //$('[data-toggle="p_select"]').material_select();
+        $('[rel="test_select2"]').select2({
+            language: 'fa',
+            dir: 'rtl'
+        });
+
+        $('[rel="check_size"]').characterCounter();
+
+        $('body').on('click', function (e) {
+            // Should optimize this
+            $('[data-toggle="ponisha_popover"]').each(function () {
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                    $(this).popover('hide');
+                }
+            });
+        });
+
+        $('[data-toggle="open-link"]').on('click', function (e) {
+            if ($(e.target).attr('href') != '#') {
+                window.location.href = $(this).data('url');
+            }
+        });
+
+        $('[data-toggle="link-modal"]').on('click', function (e) {
+            e.preventDefault();
+            $($(this).data('target')).modal('show');
+        });
+
+        $('.btn-arrow').on('click', function () {
+            if ($(this).hasClass('open')) {
+                $(this).removeClass('open')
+            } else {
+                $(this).addClass('open')
+            }
+        });
+
+        $('[data-toggle="ponisha_popover"]').each(function () {
+            var $el = $(this);
+            $el.popover(
+                {
+                    html: true,
+                    placement: 'bottom',
+                    content: function () {
+                        return $('#' + $el.data('content-id')).html();
+                    },
+                    template: '<div class="popover ' + $el.data('content-class') + '"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+                }
+            );
+        });
+
+        $('[data-toggle="message_user_bid_toggle"]').on('click', function () {
+            $('.message-user-bid').slideToggle(300);
+        });
+
+        $('[rel="toggle-sidebar"]').on('click', function () {
+            if ($('.sidebar').hasClass('open')) {
+                $('.sidebar').removeClass('open');
+            } else {
+                $('.sidebar').addClass('open');
+            }
+        });
+
+        $('body').on('click', function (e) {
+            var target = $(e.target);
+
+            if (!target.is('.sidebar *') && !target.hasClass('pf-sliderbar') && !target.hasClass('sidebar') && target.attr('rel') != 'toggle-sidebar') {
+                $('.sidebar').removeClass('open');
+            }
+        });
+
+        setInterval(function () {
+            var el = $('[rel="fade-slide"] > div:first');
+
+            el.fadeOut(1000);
+
+            setTimeout(function () {
+                el.next()
+                    .fadeIn(1000)
+                    .end()
+                    .appendTo('[rel="fade-slide"]');
+            }, 1000);
+        }, 10000);
+
+        var inputs = Array.prototype.slice.call($(".pf-input, textarea.materialize-textarea"));
+
+        inputs.forEach(function (el, i) {
+            if ($(el).val() === "") {
+                $(el).removeClass('invalid');
+                $(el).parent().find('label').attr('data-error', '');
+            } else {
+                $(el).parent().addClass("active");
+            }
+        })
+
+        $(".pf-input, textarea.materialize-textarea").focus(function () {
+            $(this).parent().addClass("active");
+        });
+
+        $(".pf-input, textarea.materialize-textarea").focusout(function () {
+            if ($(this).val() === "") {
+                $(this).removeClass('invalid');
+                $(this).parent().find('label').attr('data-error', '');
+                $(this).parent().removeClass("active");
+            }
+        });
+
+        var switcheryElems = document.querySelectorAll('.js-switch');
+        window.switcheryInstances = [];
+
+        for (var i = 0; i < switcheryElems.length; i++) {
+            if ($(switcheryElems[i]).data('instance')) {
+                window.switcheryInstances[$(switcheryElems[i]).data('instance')] = new Switchery(switcheryElems[i], {
+                    color: $(switcheryElems[i]).data('color') ? $(switcheryElems[i]).data('color') : '#669900',
+                    secondaryColor: $(switcheryElems[i]).data('second-color') ? $(switcheryElems[i]).data('second-color') : '#dfdfdf',
+                    jackColor: $(switcheryElems[i]).data('jack-color') ? $(switcheryElems[i]).data('jack-color') : '#fff',
+                    jackSecondaryColor: $(switcheryElems[i]).data('jack-secondary-color') ? $(switcheryElems[i]).data('jack-secondary-color') : null,
+                    className: $(switcheryElems[i]).data('class') ? 'switchery ' + $(switcheryElems[i]).data('class') : 'switchery',
+                    disabled: $(switcheryElems[i]).data('disabled') ? $(switcheryElems[i]).data('disabled') : false,
+                    disabledOpacity: $(switcheryElems[i]).data('disabled-opacity') ? $(switcheryElems[i]).data('disabled-opacity') : 0.5,
+                    speed: $(switcheryElems[i]).data('speed') ? $(switcheryElems[i]).data('speed') : '0.4s',
+                    size: $(switcheryElems[i]).data('size') ? $(switcheryElems[i]).data('size') : 'default'
+                });
+            } else {
+                var switchery = new Switchery(switcheryElems[i], {
+                    color: $(switcheryElems[i]).data('color') ? $(switcheryElems[i]).data('color') : '#669900',
+                    secondaryColor: $(switcheryElems[i]).data('second-color') ? $(switcheryElems[i]).data('second-color') : '#dfdfdf',
+                    jackColor: $(switcheryElems[i]).data('jack-color') ? $(switcheryElems[i]).data('jack-color') : '#fff',
+                    jackSecondaryColor: $(switcheryElems[i]).data('jack-secondary-color') ? $(switcheryElems[i]).data('jack-secondary-color') : null,
+                    className: $(switcheryElems[i]).data('class') ? 'switchery ' + $(switcheryElems[i]).data('class') : 'switchery',
+                    disabled: $(switcheryElems[i]).data('disabled') ? $(switcheryElems[i]).data('disabled') : false,
+                    disabledOpacity: $(switcheryElems[i]).data('disabled-opacity') ? $(switcheryElems[i]).data('disabled-opacity') : 0.5,
+                    speed: $(switcheryElems[i]).data('speed') ? $(switcheryElems[i]).data('speed') : '0.4s',
+                    size: $(switcheryElems[i]).data('size') ? $(switcheryElems[i]).data('size') : 'default'
+                });
+            }
+        }
+    });
+
+})( jQuery );
